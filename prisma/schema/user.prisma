@@ -1,0 +1,17 @@
+enum UserRole {
+    USER
+    ADMIN
+}
+
+model User {
+    id           String   @id @default(uuid()) @map("id") @db.Uuid
+    email        String   @unique @map("email") @db.VarChar(255)
+    passwordHash String   @map("password_hash") @db.VarChar(255)
+    role         UserRole @default(USER) @map("role")
+    createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+    updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+    links ShortLink[]
+
+    @@map("users")
+}

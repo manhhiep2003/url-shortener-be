@@ -26,8 +26,9 @@ ENV NODE_ENV=production
 COPY package*.json ./
 RUN npm ci --omit=dev || npm install --omit=dev
 COPY --from=build /app/dist ./dist
-# COPY --from=build /app/prisma ./prisma
-# COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
+# Prisma schema + migrations so `migrate deploy` works at runtime
+COPY --from=build /app/prisma ./prisma
+COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
 EXPOSE 3000
 # Run migrations when Prisma is present, then start API.
 # `|| true` keeps the container working before Prisma is added.

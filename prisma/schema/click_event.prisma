@@ -1,0 +1,12 @@
+model ClickEvent {
+    id           String    @id @default(uuid()) @map("id") @db.Uuid
+    shortLinkId  String    @map("short_link_id") @db.Uuid
+    shortLink    ShortLink @relation(fields: [shortLinkId], references: [id], onDelete: Cascade)
+    clickedAt    DateTime  @default(now()) @map("clicked_at") @db.Timestamptz(3)
+    referrerHost String?   @map("referrer_host") @db.VarChar(255)
+    deviceType   String?   @map("device_type") @db.VarChar(32)
+    countryCode  String?   @map("country_code") @db.VarChar(2)
+
+    @@index([shortLinkId, clickedAt])
+    @@map("click_events")
+}

@@ -1,0 +1,23 @@
+enum LinkStatus {
+    ACTIVE
+    DISABLED
+}
+
+model ShortLink {
+    id             String     @id @default(uuid()) @map("id") @db.Uuid
+    code           String     @unique @map("code") @db.VarChar(64)
+    destinationUrl String     @map("destination_url") @db.Text
+    title          String?    @map("title") @db.VarChar(255)
+    ownerId        String     @map("owner_id") @db.Uuid
+    owner          User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    status         LinkStatus @default(ACTIVE) @map("status")
+    expiresAt      DateTime?  @map("expires_at") @db.Timestamptz(3)
+    createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamptz(3)
+    updatedAt      DateTime   @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+    clicks ClickEvent[]
+
+    @@index([ownerId, createdAt])
+    @@index([ownerId, status])
+    @@map("short_links")
+}
